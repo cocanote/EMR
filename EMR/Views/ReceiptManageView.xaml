@@ -1,0 +1,185 @@
+﻿<Window x:Class="EMR.Receipt_management"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        DataContext="{Binding Source={StaticResource Locator}, Path=ReceiptManageViewModel}"
+        xmlns:local="clr-namespace:EMR"
+       
+        mc:Ignorable="d"
+        
+        Title="Receipt_management" Height="750" Width="810">
+    <Grid Margin="0,0,0,35">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="38*" />
+            <RowDefinition Height="96*" />
+            <RowDefinition Height="57*" />
+            <RowDefinition Height="37*" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="환자 검색" Margin="10,10,350,10" Padding="10" >
+            <Grid Margin="0,0,-7,-5" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="73*"/>
+                    <ColumnDefinition Width="97*"/>
+                    <ColumnDefinition Width="77*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Label Content="성 명*"  Background="#D5D5D5"/>
+                <Label Grid.Row="1" Content="주민 번호*" Background="#D5D5D5"/>
+                <TextBox Grid.Column="1" Text="{Binding PatientInfo.name,Mode=TwoWay}" Height="28" VerticalAlignment="Top"/>
+                <TextBox Grid.Column="1" Text="{Binding PatientInfo.rrnumber}" Grid.Row="1" />
+                <Button Grid.Column="2" Grid.RowSpan="2" Margin="5,0,0,0" Command="{Binding OnclickSearchCommand}"  >
+
+                    <Image Source="/imgs/search2.png" Height="33" Width="39"/>
+                </Button>
+            </Grid>
+        </GroupBox>
+
+        <Grid Margin="447,38,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="37*"/>
+                <ColumnDefinition Width="75*"/>
+                <ColumnDefinition Width="111*"/>
+                <ColumnDefinition Width="45*"/>
+                <ColumnDefinition Width="66*"/>
+                <ColumnDefinition Width="111*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.ColumnSpan="2"  >
+                <WrapPanel Height="24" Width="56" >
+                    <Image Source="/imgs/new.png" Height="24" Width="26" />
+                    <TextBlock > 신규</TextBlock >
+                </WrapPanel>
+
+            </Button>
+            <Button Grid.Column="2">
+                <WrapPanel Height="24" Width="56" >
+                    <Image Source="/imgs/insert.png" Height="24" Width="26" />
+                    <TextBlock > 입력</TextBlock >
+                </WrapPanel>
+
+            </Button>
+            <Button Grid.Column="3" Grid.ColumnSpan="2">
+                <WrapPanel Height="24" Width="56" >
+                    <Image Source="/imgs/modify.png" Height="24" Width="26" />
+                    <TextBlock > 수정</TextBlock >
+                </WrapPanel>
+
+            </Button  >
+            <Button Grid.Column="5">
+                <WrapPanel Height="24" Width="56" >
+                    <Image Source="/imgs/delete.png" Height="24" Width="26" />
+                    <TextBlock > 삭제</TextBlock >
+                </WrapPanel>
+            </Button>
+        </Grid>
+        <GroupBox Header="환자 기본정보" Margin="10,10,0,0" Grid.Row="1">
+            <Grid  >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="65*" />
+                    <ColumnDefinition Width="38*"/>
+                    <ColumnDefinition Width="27*"/>
+                    <ColumnDefinition Width="65*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Content="차트 번호*" Margin="0,0,162,5" VerticalContentAlignment="Center"/>
+                <TextBox Margin="95,0,0,5" Text="{Binding PatientInfo.id}"/>
+                <Label Content="보험 구분*" Margin="0,0,54,5" VerticalContentAlignment="Center" Grid.Column="1"/>
+                <ComboBox Margin="95,0,0,5" Grid.Column="1" SelectedItem="{Binding PatientInfo.Insurance}" ItemsSource="{Binding Insurance}" Grid.ColumnSpan="2"/>
+
+                <Label Content="피보험자*" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Column="3"/>
+                <TextBox Margin="94,0,0,5" Grid.Column="3" Text="{Binding PatientInfo.insuredperson_name}" />
+
+                <Label Content="관계" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Row="1"/>
+                <ComboBox Margin="95,0,0,5" Grid.Row="1"  SelectedItem="{Binding PatientInfo.Relationship}" ItemsSource="{Binding Relation}" />
+                <Label Content="조합" Margin="0,0,54,5" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="1" />
+                <TextBox Margin="95,0,0,5" Grid.Column="1" Grid.Row="1" Text="{Binding PatientInfo.Combination}" Grid.ColumnSpan="3"/>
+
+                <Label Content="중번호" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Row="2"/>
+                <TextBox Margin="95,0,0,5"  Text="{Binding PatientInfo.card_number}" Grid.Row="2" />
+                <Label Content="휴대폰" Margin="0,0,54,5" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="2"/>
+                <TextBox Margin="95,0,0,5" Grid.Column="1"  Text="{Binding PatientInfo.cellphone}" Grid.Row="2" Grid.ColumnSpan="2"/>
+                <Label Content="전화*" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Column="3" Grid.Row="2"/>
+                <TextBox Margin="94,0,0,5" Grid.Column="3"  Text="{Binding PatientInfo.phone}"  Grid.Row="2" />
+
+                <Label Content="우편번호" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Row="3"/>
+                <TextBox Margin="95,0,0,5" Text="{Binding PatientInfo.post_number}" Grid.Row="3" />
+
+                <Label Content="주소*" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Row="4"/>
+                <TextBox Margin="95,0,0,5" Text="{Binding PatientInfo.adrress}" Grid.Row="4"  Grid.ColumnSpan="3"/>
+                <TextBox Grid.Column="3"  Grid.Row="4" Margin="0,0,0,5" />
+
+                <Label Content="E-Mail" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Row="5"/>
+                <TextBox Margin="95,0,102,5" Grid.Row="5" Text="{Binding PatientInfo.mail}" Grid.ColumnSpan="3" />
+                <Label Content="메모" Margin="3,0,0,5" VerticalContentAlignment="Center" Grid.Column="2" Grid.Row="5"/>
+                <TextBox Margin="0,0,0,5" Grid.Column="3" Text="{Binding PatientInfo.patient_memo}" Grid.Row="5" Grid.RowSpan="2"/>
+
+                <Label Content="할인(%)" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Row="6"/>
+                <ComboBox Margin="95,0,0,5" Grid.Row="6"  SelectedItem="{Binding PatientInfo.discount_percent}" ItemsSource="{Binding Discount_percent}" />
+                <ComboBox Margin="0,0,0,5" Grid.Column="1" Grid.Row="6 "  SelectedItem="{Binding PatientInfo.discount_reason}" ItemsSource="{Binding Discount_reason}" Grid.ColumnSpan="2"/>
+
+                <Label Content="담당자*" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Row="7"/>
+                <ComboBox Margin="95,0,0,5" Grid.Row="7"  SelectedItem="{Binding PatientInfo.in_charge_name}" ItemsSource="{Binding In_chage_name}"/>
+                <Label Content="생일" Margin="0,0,54,5" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="7"/>
+                <TextBox Margin="95,0,0,5" Text="{Binding PatientInfo.birthday}" Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="2"/>
+                <CheckBox Content="음력" Grid.Column="3" HorizontalAlignment="Left" Margin="10,9,0,8" IsChecked="{Binding PatientInfo.calender}" Grid.Row="7"/>
+            </Grid>
+
+        </GroupBox>
+        <GroupBox Header="접수 정보" Margin="10,10,0,0" Grid.Row="2">
+            <Grid  Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="335*"/>
+                    <ColumnDefinition Width="273*"/>
+                    <ColumnDefinition Width="184*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Content="환자구분*(%)" Margin="0,0,233,5" VerticalContentAlignment="Center" />
+                <ComboBox Margin="93,0,0,5" />
+                <Label Content="담당의사*" Margin="0,0,171,5" VerticalContentAlignment="Center" Grid.Column="1" />
+                <ComboBox Margin="94,0,0,5" Grid.Column="1"/>
+
+                <Button Content="접수" Grid.Column="2" Margin="3,0,120,22" Grid.RowSpan="2"/>
+                <Button Content="수정" Grid.Column="2" Margin="63,0,60,22" Grid.RowSpan="2"/>
+                <Button Content="예약 접수" Grid.Column="2" Margin="123,0,0,22" Grid.RowSpan="2"/>
+
+                <Label Content="시리즈*" Margin="0,0,233,5" VerticalContentAlignment="Center" Grid.Row="1"/>
+                <ComboBox Margin="93,0,0,5" Grid.Row="1"/>
+                <Label Content="초/재진구분*" Margin="0,0,171,5" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="1"/>
+                <ComboBox Margin="94,0,0,5" Grid.Column="1" Grid.Row="1"/>
+
+                <Label Content="최종내원일" Margin="0,0,233,5" VerticalContentAlignment="Center" Grid.Row="2"/>
+                <TextBox Margin="93,0,0,5" Grid.Row="2"/>
+                <Label Content="메모" Margin="0,0,171,5" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="2"/>
+                <TextBox Margin="94,0,30,10" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+
+                <Label Content="예약한시각" Margin="0,0,233,5" VerticalContentAlignment="Center" Grid.Row="3"/>
+                <TextBox Margin="93,0,153,5" Grid.Row="3"/>
+                <CheckBox Content="대리인"  Margin="195,0,71,0" Grid.Row="3"/>
+                <CheckBox Content="등급"  Margin="278,0,0,0" Grid.Row="3"/>
+                <CheckBox Content="예진"  Margin="19,0,197,0" Grid.Row="3" Grid.Column="1"/>
+
+            </Grid>
+        </GroupBox>
+        <ListView Margin="10" Grid.Row="3" Name="patient">
+            <ListViewItem Content="{Binding patientInfos}"/>
+        </ListView>
+    </Grid>
+</Window>
