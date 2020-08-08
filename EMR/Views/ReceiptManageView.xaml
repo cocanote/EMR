@@ -9,6 +9,9 @@
         mc:Ignorable="d"
         
         Title="Receipt_management" Height="750" Width="810">
+    <Window.Resources>
+        <local:YourConverter x:Key="YourConverter" />
+    </Window.Resources>
     <Grid Margin="0,0,0,35">
         <Grid.RowDefinitions>
             <RowDefinition Height="38*" />
@@ -28,12 +31,19 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Label Content="성 명*"  Background="#D5D5D5"/>
-                <Label Grid.Row="1" Content="주민 번호*" Background="#D5D5D5"/>
-                <TextBox Grid.Column="1" Text="{Binding PatientInfo.name,Mode=TwoWay}" Height="28" VerticalAlignment="Top"/>
-                <TextBox Grid.Column="1" Text="{Binding PatientInfo.rrnumber}" Grid.Row="1" />
-                <Button Grid.Column="2" Grid.RowSpan="2" Margin="5,0,0,0" Command="{Binding OnclickSearchCommand}"  >
-
+                <Label  Content="성 명*"  Background="#D5D5D5"/>
+                <Label  Grid.Row="1" Content="주민 번호*" Background="#D5D5D5"/>
+                <TextBox Name ="InputName" Grid.Column="1" Text="{Binding PatientInfo.name,Mode=TwoWay}" Height="28" VerticalAlignment="Top"/>
+                <TextBox Name="Inputnumber" Grid.Column="1" Text="{Binding PatientInfo.rrnumber}" Grid.Row="1" />
+                <Button Grid.Column="2" Grid.RowSpan="2" Margin="5,0,0,0" Command="{Binding OnclickSearch2Command}"   >
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource YourConverter}">
+                            <Binding ElementName="InputName" Path="Text" />
+                            <Binding ElementName="Inputnumber" Path="Text" />
+                            
+                        </MultiBinding>
+                        
+                    </Button.CommandParameter>
                     <Image Source="/imgs/search2.png" Height="33" Width="39"/>
                 </Button>
             </Grid>

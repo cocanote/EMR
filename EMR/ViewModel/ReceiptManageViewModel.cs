@@ -9,6 +9,8 @@ using System.Windows;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using EMR.Model;
+using System.Windows.Data;
+using System.Globalization;
 
 namespace EMR.ViewModel
 {
@@ -17,6 +19,22 @@ namespace EMR.ViewModel
         IPatientInfoService ObjPatientInfoService;
 
         public RelayCommand OnclickSearchCommand { get; set; }
+      
+        public RelayCommand<object> OnclickSearch2Command
+        {
+            get;
+            private set;
+        }
+
+        public ReceiptManageViewModel()
+        {
+            ObjPatientInfoService = new PatientInfoService();
+            OnclickSearchCommand = new RelayCommand(OnclickSearchCommend, null);
+            OnclickSearch2Command = new RelayCommand<object>((args) => ExecuteMyCommand(args));
+
+        }
+
+       
         private PatientInfoModel patientInfo;
         string[] insurance = {"실비보험","생명보험","상해보험"};
         string[] relation = { "부", "모", "본인","기타" };
@@ -57,30 +75,52 @@ namespace EMR.ViewModel
             set { in_chage_name = value; }
         }
 
+        
+
         public PatientInfoModel PatientInfo
         {
             get { return patientInfo; }
             set{  patientInfo = value; RaisePropertyChanged(() => PatientInfo); }
 
+
         }
 
-         public ReceiptManageViewModel()
-         {
-            ObjPatientInfoService = new PatientInfoService();
-            OnclickSearchCommand = new RelayCommand(OnclickSearchCommend, null);
 
 
-         }
-        
-       
+        private void ExecuteMyCommand(object args)
+        {
+            var param = (Tuple<object, object>)args;
+
+            // e.g. for two TextBox object
+            var name = (string)param.Item1;
+            var rrnumber = (string)param.Item2;
+            System.Diagnostics.Trace.WriteLine(name);
+            System.Diagnostics.Trace.WriteLine(rrnumber);
+        }
         private void OnclickSearchCommend()
         {
            
-            PatientInfo = ObjPatientInfoService.Search(patientInfo.name,patientInfo.rrnumber);
+            PatientInfo = ObjPatientInfoService.Search("","");
 
             System.Diagnostics.Trace.WriteLine(patientInfo.name);
         
 
         }
+    }
+    public class YourConverter : IMultiValueConverter
+    {
+
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Tuple<object, object> Tuple = new Tuple<object, object>(values[0], values[1]);
+            return Tuple;
+        }
+
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

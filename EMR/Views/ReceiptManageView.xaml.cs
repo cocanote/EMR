@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Globalization;
 
 namespace EMR
 {
@@ -24,61 +25,24 @@ namespace EMR
         public Receipt_management()
         {
             InitializeComponent();
+      
         }
-        OracleConnection conn;
-        String name2;
+     
+    }
+    public class YourConverter : IMultiValueConverter
+    {
 
-
-
-       
-        /* public String CurrentTime
-         {
-             get { return currentTime; }
-             set { currentTime = value; RaisePropertyChanged(() => CurrentTime); }
-         }
-
-
-        */
-       
-        private void Select_Emp(object sender, RoutedEventArgs e)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            try
-            {
-                string strCon = "Data Source=orcl;User Id=c##scott;Password=tiger;";
-                conn = new OracleConnection(strCon);
-                conn.Open();
-                MessageBox.Show("DB Connection OK!");
-            }
-            catch (Exception error)
-            {
-                MessageBox.Show(error.ToString());
-            }
-            string sql = "select id, name, rrnumber from patientinfo ";
-
-            OracleCommand comm = new OracleCommand();         
-            comm.Connection = conn;
-            comm.CommandText = sql;
-
-            OracleDataReader reader = comm.ExecuteReader(CommandBehavior.CloseConnection);
-
-            List<PatientInfoModel> emps = new List<PatientInfoModel>();
-            while (reader.Read())
-            {
-                System.Diagnostics.Trace.WriteLine(reader.GetString(reader.GetOrdinal("name")));
-                emps.Add(new PatientInfoModel()
-                {
-                    id = reader.GetInt32(reader.GetOrdinal("id")),
-                    name = reader.GetString(reader.GetOrdinal("name")),
-                   rrnumber  = reader.GetString(reader.GetOrdinal("rrnumber"))
-
-                  
-            });
-            }
-            
-
-
-
-            reader.Close();
+            Tuple<object, object> Tuple = new Tuple<object, object>(values[0], values[1]);
+            return Tuple;
         }
+
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
