@@ -17,36 +17,56 @@ namespace EMR.ViewModel
     public class ReceiptManageViewModel : ViewModelBase
     {
         IPatientInfoService ObjPatientInfoService;
-
+       
         public RelayCommand OnclickSearchCommand { get; set; }
-      
-        public RelayCommand<object> OnclickSearch2Command
-        {
-            get;
-            private set;
-        }
+        public RelayCommand OnclickNewCommand { get; set; }
+        public RelayCommand OnclickSaveCommand { get; set; }
+        public RelayCommand OnclickModifyCommand { get; set; }
+        public RelayCommand OnclickDeleteCommand { get; set; }
+        private PatientInfoModel patientInfo;
+        string[] insurance = { "실비보험", "생명보험", "상해보험" };
+        string[] relation = { "부", "모", "본인", "기타" };
+        string[] discount_percent = { "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
+        string[] discount_reason = { "임직원가족", "저소득층", "장애인의료비지원", };
+        string[] in_chage_name = { "안재홍", "이병원", "김머핀" };
+        bool checkedVar = false;
 
         public ReceiptManageViewModel()
         {
             ObjPatientInfoService = new PatientInfoService();
             OnclickSearchCommand = new RelayCommand(OnclickSearchCommend, null);
-            OnclickSearch2Command = new RelayCommand<object>((args) => ExecuteMyCommand(args));
+            OnclickNewCommand = new RelayCommand(OnclickNewCommend, null);
+            OnclickSaveCommand = new RelayCommand(OnclickSaveCommend, null);
+            OnclickModifyCommand = new RelayCommand(OnclickModifyCommend, null);
+            OnclickDeleteCommand = new RelayCommand(OnclickDeleteCommend, null);
+            PatientInfo = new PatientInfoModel();
+            ReadOn = true;
+            Comboclick = false;
+           
 
         }
 
-       
-        private PatientInfoModel patientInfo;
-        string[] insurance = {"실비보험","생명보험","상해보험"};
-        string[] relation = { "부", "모", "본인","기타" };
-        string[] discount_percent = { "10", "20", "30","40","50","60","70","80","90","100" };
-        string[] discount_reason = { "임직원가족", "저소득층", "장애인의료비지원", };
-        string[] in_chage_name = { "안재홍", "이병원", "김머핀" };
-        bool checkedVar = false;
+        
 
         public bool CheckedVar
         {
-            get { System.Diagnostics.Trace.WriteLine(checkedVar+"1"); return checkedVar;  }
-            set { System.Diagnostics.Trace.WriteLine(checkedVar); checkedVar = value; }
+            get {  return checkedVar;  }
+            set { checkedVar = value; }
+        }
+
+        private bool readOn;
+
+        public bool ReadOn
+        {
+            get { return readOn; }
+            set { readOn = value; RaisePropertyChanged(() => ReadOn); }
+        }
+        private bool comboclick;
+
+        public bool Comboclick
+        {
+            get { return comboclick; }
+            set { comboclick = value; RaisePropertyChanged(() => Comboclick); }
         }
 
         public string[] Insurance
@@ -87,40 +107,39 @@ namespace EMR.ViewModel
 
 
 
-        private void ExecuteMyCommand(object args)
-        {
-            var param = (Tuple<object, object>)args;
-
-            // e.g. for two TextBox object
-            var name = (string)param.Item1;
-            var rrnumber = (string)param.Item2;
-            System.Diagnostics.Trace.WriteLine(name);
-            System.Diagnostics.Trace.WriteLine(rrnumber);
-        }
         private void OnclickSearchCommend()
         {
-           
-            PatientInfo = ObjPatientInfoService.Search("","");
-
-            System.Diagnostics.Trace.WriteLine(patientInfo.name);
-        
-
+            PatientInfo = ObjPatientInfoService.Search(PatientInfo.name, PatientInfo.rrnumber);
+            ReadOn = false;
+            Comboclick = true;
         }
-    }
-    public class YourConverter : IMultiValueConverter
-    {
-
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        private void OnclickNewCommend()
         {
-            Tuple<object, object> Tuple = new Tuple<object, object>(values[0], values[1]);
-            return Tuple;
+            PatientInfo = new PatientInfoModel();
+            MessageBox.Show("환자정보를 입력해주세요");
+            ReadOn = false;
+            Comboclick = true;
+
         }
-
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        private void OnclickSaveCommend()
         {
-            throw new NotImplementedException();
+            if (ObjPatientInfoService.Insert(PatientInfo))
+            {
+                ReadOn = true;
+                Comboclick = false;
+            }
+        }
+        private void OnclickModifyCommend()
+        {
+       
+            ObjPatientInfoService.Update(PatientInfo);
+        }
+        private void OnclickDeleteCommend()
+        {
+            ObjPatientInfoService.Delete(PatientInfo.id);
+            PatientInfo = new PatientInfoModel();
         }
 
     }
+   
 }

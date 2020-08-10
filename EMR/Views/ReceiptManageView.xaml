@@ -9,9 +9,6 @@
         mc:Ignorable="d"
         
         Title="Receipt_management" Height="750" Width="810">
-    <Window.Resources>
-        <local:YourConverter x:Key="YourConverter" />
-    </Window.Resources>
     <Grid Margin="0,0,0,35">
         <Grid.RowDefinitions>
             <RowDefinition Height="38*" />
@@ -35,15 +32,8 @@
                 <Label  Grid.Row="1" Content="주민 번호*" Background="#D5D5D5"/>
                 <TextBox Name ="InputName" Grid.Column="1" Text="{Binding PatientInfo.name,Mode=TwoWay}" Height="28" VerticalAlignment="Top"/>
                 <TextBox Name="Inputnumber" Grid.Column="1" Text="{Binding PatientInfo.rrnumber}" Grid.Row="1" />
-                <Button Grid.Column="2" Grid.RowSpan="2" Margin="5,0,0,0" Command="{Binding OnclickSearch2Command}"   >
-                    <Button.CommandParameter>
-                        <MultiBinding Converter="{StaticResource YourConverter}">
-                            <Binding ElementName="InputName" Path="Text" />
-                            <Binding ElementName="Inputnumber" Path="Text" />
-                            
-                        </MultiBinding>
-                        
-                    </Button.CommandParameter>
+                <Button Grid.Column="2" Grid.RowSpan="2" Margin="5,0,0,0" Command= "{Binding OnclickSearchCommand}" >
+                    
                     <Image Source="/imgs/search2.png" Height="33" Width="39"/>
                 </Button>
             </Grid>
@@ -58,28 +48,28 @@
                 <ColumnDefinition Width="66*"/>
                 <ColumnDefinition Width="111*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.ColumnSpan="2"  >
+            <Button Grid.ColumnSpan="2" Command="{Binding OnclickNewCommand}" >
                 <WrapPanel Height="24" Width="56" >
                     <Image Source="/imgs/new.png" Height="24" Width="26" />
                     <TextBlock > 신규</TextBlock >
                 </WrapPanel>
 
             </Button>
-            <Button Grid.Column="2">
+            <Button Grid.Column="2" Command="{Binding OnclickSaveCommand}">
                 <WrapPanel Height="24" Width="56" >
                     <Image Source="/imgs/insert.png" Height="24" Width="26" />
-                    <TextBlock > 입력</TextBlock >
+                    <TextBlock > 저장</TextBlock >
                 </WrapPanel>
 
             </Button>
-            <Button Grid.Column="3" Grid.ColumnSpan="2">
+            <Button Grid.Column="3" Grid.ColumnSpan="2" Command="{Binding OnclickModifyCommand}">
                 <WrapPanel Height="24" Width="56" >
                     <Image Source="/imgs/modify.png" Height="24" Width="26" />
                     <TextBlock > 수정</TextBlock >
                 </WrapPanel>
 
             </Button  >
-            <Button Grid.Column="5">
+            <Button Grid.Column="5" Command="{Binding OnclickDeleteCommand}">
                 <WrapPanel Height="24" Width="56" >
                     <Image Source="/imgs/delete.png" Height="24" Width="26" />
                     <TextBlock > 삭제</TextBlock >
@@ -105,46 +95,46 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Label Content="차트 번호*" Margin="0,0,162,5" VerticalContentAlignment="Center"/>
-                <TextBox Margin="95,0,0,5" Text="{Binding PatientInfo.id}"/>
+                <TextBox Margin="95,0,0,5" Text="{Binding PatientInfo.id}" IsReadOnly="true"/>
                 <Label Content="보험 구분*" Margin="0,0,54,5" VerticalContentAlignment="Center" Grid.Column="1"/>
-                <ComboBox Margin="95,0,0,5" Grid.Column="1" SelectedItem="{Binding PatientInfo.Insurance}" ItemsSource="{Binding Insurance}" Grid.ColumnSpan="2"/>
+                <ComboBox Margin="95,0,0,5" Grid.Column="1" SelectedItem="{Binding PatientInfo.Insurance}" ItemsSource="{Binding Insurance}" Grid.ColumnSpan="2"  IsHitTestVisible="{Binding Comboclick}"/>
 
                 <Label Content="피보험자*" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Column="3"/>
-                <TextBox Margin="94,0,0,5" Grid.Column="3" Text="{Binding PatientInfo.insuredperson_name}" />
+                <TextBox Margin="94,0,0,5" Grid.Column="3" Text="{Binding PatientInfo.insuredperson_name}"  IsReadOnly="{Binding ReadOn}"/>
 
                 <Label Content="관계" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Row="1"/>
-                <ComboBox Margin="95,0,0,5" Grid.Row="1"  SelectedItem="{Binding PatientInfo.Relationship}" ItemsSource="{Binding Relation}" />
+                <ComboBox Margin="95,0,0,5" Grid.Row="1"  SelectedItem="{Binding PatientInfo.Relationship}" ItemsSource="{Binding Relation}" IsHitTestVisible="{Binding Comboclick}" />
                 <Label Content="조합" Margin="0,0,54,5" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="1" />
-                <TextBox Margin="95,0,0,5" Grid.Column="1" Grid.Row="1" Text="{Binding PatientInfo.Combination}" Grid.ColumnSpan="3"/>
+                <TextBox Margin="95,0,0,5" Grid.Column="1" Grid.Row="1" Text="{Binding PatientInfo.Combination}" Grid.ColumnSpan="3"  IsReadOnly="{Binding ReadOn}"/>
 
                 <Label Content="중번호" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Row="2"/>
-                <TextBox Margin="95,0,0,5"  Text="{Binding PatientInfo.card_number}" Grid.Row="2" />
+                <TextBox Margin="95,0,0,5"  Text="{Binding PatientInfo.card_number}" Grid.Row="2" IsReadOnly="{Binding ReadOn}" />
                 <Label Content="휴대폰" Margin="0,0,54,5" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="2"/>
-                <TextBox Margin="95,0,0,5" Grid.Column="1"  Text="{Binding PatientInfo.cellphone}" Grid.Row="2" Grid.ColumnSpan="2"/>
+                <TextBox Margin="95,0,0,5" Grid.Column="1"  Text="{Binding PatientInfo.cellphone}" Grid.Row="2" Grid.ColumnSpan="2"  IsReadOnly="{Binding ReadOn}"/>
                 <Label Content="전화*" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Column="3" Grid.Row="2"/>
-                <TextBox Margin="94,0,0,5" Grid.Column="3"  Text="{Binding PatientInfo.phone}"  Grid.Row="2" />
+                <TextBox Margin="94,0,0,5" Grid.Column="3"  Text="{Binding PatientInfo.phone}"  Grid.Row="2"  IsReadOnly="{Binding ReadOn}" />
 
                 <Label Content="우편번호" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Row="3"/>
-                <TextBox Margin="95,0,0,5" Text="{Binding PatientInfo.post_number}" Grid.Row="3" />
+                <TextBox Margin="95,0,0,5" Text="{Binding PatientInfo.post_number}" Grid.Row="3" IsReadOnly="{Binding ReadOn}" />
 
                 <Label Content="주소*" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Row="4"/>
-                <TextBox Margin="95,0,0,5" Text="{Binding PatientInfo.adrress}" Grid.Row="4"  Grid.ColumnSpan="3"/>
-                <TextBox Grid.Column="3"  Grid.Row="4" Margin="0,0,0,5" />
+                <TextBox Margin="95,0,0,5" Text="{Binding PatientInfo.adrress}" Grid.Row="4"  Grid.ColumnSpan="3" IsReadOnly="{Binding ReadOn}"/>
+                <TextBox Grid.Column="3"  Grid.Row="4" Margin="0,0,0,5"  IsReadOnly="{Binding ReadOn}" />
 
                 <Label Content="E-Mail" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Row="5"/>
-                <TextBox Margin="95,0,102,5" Grid.Row="5" Text="{Binding PatientInfo.mail}" Grid.ColumnSpan="3" />
+                <TextBox Margin="95,0,102,5" Grid.Row="5" Text="{Binding PatientInfo.mail}" Grid.ColumnSpan="3" IsReadOnly="{Binding ReadOn}" />
                 <Label Content="메모" Margin="3,0,0,5" VerticalContentAlignment="Center" Grid.Column="2" Grid.Row="5"/>
-                <TextBox Margin="0,0,0,5" Grid.Column="3" Text="{Binding PatientInfo.patient_memo}" Grid.Row="5" Grid.RowSpan="2"/>
+                <TextBox Margin="0,0,0,5" Grid.Column="3" Text="{Binding PatientInfo.patient_memo}" Grid.Row="5" Grid.RowSpan="2" IsReadOnly="{Binding ReadOn}"/>
 
                 <Label Content="할인(%)" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Row="6"/>
-                <ComboBox Margin="95,0,0,5" Grid.Row="6"  SelectedItem="{Binding PatientInfo.discount_percent}" ItemsSource="{Binding Discount_percent}" />
-                <ComboBox Margin="0,0,0,5" Grid.Column="1" Grid.Row="6 "  SelectedItem="{Binding PatientInfo.discount_reason}" ItemsSource="{Binding Discount_reason}" Grid.ColumnSpan="2"/>
+                <ComboBox Margin="95,0,0,5" Grid.Row="6"  SelectedItem="{Binding PatientInfo.discount_percent}" ItemsSource="{Binding Discount_percent}" IsHitTestVisible="{Binding Comboclick}" />
+                <ComboBox Margin="0,0,0,5" Grid.Column="1" Grid.Row="6 "  SelectedItem="{Binding PatientInfo.discount_reason}" ItemsSource="{Binding Discount_reason}" Grid.ColumnSpan="2" IsHitTestVisible="{Binding Comboclick}"/>
 
                 <Label Content="담당자*" Margin="0,0,162,5" VerticalContentAlignment="Center" Grid.Row="7"/>
-                <ComboBox Margin="95,0,0,5" Grid.Row="7"  SelectedItem="{Binding PatientInfo.in_charge_name}" ItemsSource="{Binding In_chage_name}"/>
+                <ComboBox Margin="95,0,0,5" Grid.Row="7"  SelectedItem="{Binding PatientInfo.in_charge_name}" ItemsSource="{Binding In_chage_name}"  IsReadOnly="{Binding ReadOn}" IsHitTestVisible="{Binding Comboclick}"/>
                 <Label Content="생일" Margin="0,0,54,5" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="7"/>
-                <TextBox Margin="95,0,0,5" Text="{Binding PatientInfo.birthday}" Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="2"/>
-                <CheckBox Content="음력" Grid.Column="3" HorizontalAlignment="Left" Margin="10,9,0,8" IsChecked="{Binding PatientInfo.calender}" Grid.Row="7"/>
+                <TextBox Margin="95,0,0,5" Text="{Binding PatientInfo.birthday}" Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="2"  IsReadOnly="{Binding ReadOn}"/>
+                <CheckBox Content="음력" Grid.Column="3" HorizontalAlignment="Left" Margin="10,9,0,8" IsChecked="{Binding PatientInfo.calender}" Grid.Row="7"  IsHitTestVisible="{Binding Comboclick}"/>
             </Grid>
 
         </GroupBox>

@@ -8,7 +8,7 @@ namespace EMR.Model
 {
     interface IPatientInfoService
     {
-        List<PatientInfoModel> GetAll();
+     
         bool Insert(PatientInfoModel objNewPatienInfo);
         bool Update(PatientInfoModel objNewPatienInfo);
         bool Delete(int id);

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,43 +12,83 @@ namespace EMR.Model
 {
     class PatientInfoService : IPatientInfoService
     {
-        private static List<PatientInfoModel> objpatientInfoModels;
+      
         OracleConnection conn;
         public PatientInfoService()
         {
-            
         }
 
        
 
-        public List<PatientInfoModel> GetAll()
-        {
-            return objpatientInfoModels;
-        }
-
+        
         public bool Insert(PatientInfoModel objNewPatienInfo)
         {
-            throw new NotImplementedException();
+            DbConnect_init();
+            String sql = "INSERT INTO patientInfo (rrnumber, Insurance, insuredperson_name, card_number, Relationship, Combination, name, cellphone, phone, post_number, adrress, mail, " +
+                "patient_memo, discount_percent, discount_reason, in_charge_name, birthday, calender) VALUES ('"+objNewPatienInfo.rrnumber+"','"+objNewPatienInfo.Insurance + "','"+objNewPatienInfo.insuredperson_name + 
+                "','"+objNewPatienInfo.card_number+"','"+ objNewPatienInfo.Relationship + "','" + objNewPatienInfo.Combination + "','" + objNewPatienInfo.name + "','"+ objNewPatienInfo.cellphone + 
+                "','" + objNewPatienInfo.phone + "','" + objNewPatienInfo.post_number + "','" + objNewPatienInfo.adrress + "','" + objNewPatienInfo.mail + "','" + objNewPatienInfo .patient_memo+ "','" + objNewPatienInfo.discount_percent
+                + "','" + objNewPatienInfo.discount_reason + "','" + objNewPatienInfo .in_charge_name+ "','" + objNewPatienInfo.birthday + "','" + objNewPatienInfo.calender +"') ";
+           
+
+            OracleCommand comm = new OracleCommand();
+            comm.Connection = conn;
+            comm.CommandText = sql;
+            
+            try
+            {
+                comm.ExecuteNonQuery();
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show("올바른 환자 정보를 입력하세요");
+                conn.Close();
+                return false;
+            }
+            conn.Close();
+            MessageBox.Show("저장되었습니다.");
+            return true;
+            
         }
         public bool Delete(int id)
         {
-            throw new NotImplementedException();
-        }
+            DbConnect_init();
+            String sql = "Delete From patientinfo WHERE id = '" + id + "'";
+            OracleCommand comm = new OracleCommand();
+            comm.Connection = conn;
+            comm.CommandText = sql;
 
-        public PatientInfoModel Search(String name, String rrnumber)
+            try
+            {
+                comm.ExecuteNonQuery();
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show("삭제할 값이 없습니다.");
+                conn.Close();
+                return false;
+            }
+            conn.Close();
+            MessageBox.Show("삭제되었습니다.");
+            return true;
+        }
+        public void DbConnect_init()
         {
             try
             {
                 string strCon = "Data Source=orcl;User Id=c##scott;Password=tiger;";
                 conn = new OracleConnection(strCon);
                 conn.Open();
-                MessageBox.Show("DB Connection OK!");
             }
             catch (Exception error)
             {
                 MessageBox.Show(error.ToString());
             }
-            string sql = "select * from patientinfo ";
+        }
+        public PatientInfoModel Search(String name, String rrnumber)
+        {
+            DbConnect_init();
+            string sql = "select * from patientinfo where name= '"+name+"' AND rrnumber ='"+rrnumber+"'";
 
             OracleCommand comm = new OracleCommand();
             comm.Connection = conn;
@@ -56,8 +97,11 @@ namespace EMR.Model
             OracleDataReader reader = comm.ExecuteReader(CommandBehavior.CloseConnection);
 
             PatientInfoModel patientInfoModels = new PatientInfoModel();
-            while (reader.Read())
+
+
+            if (reader.Read())
             {
+                
                 System.Diagnostics.Trace.WriteLine(reader.GetString(reader.GetOrdinal("name")));
                 patientInfoModels.id = reader.GetInt32(reader.GetOrdinal("id"));
                 patientInfoModels.name = reader.GetString(reader.GetOrdinal("name"));
@@ -77,20 +121,62 @@ namespace EMR.Model
                 patientInfoModels.discount_reason =  reader.GetString(reader.GetOrdinal("discount_reason"));
                 patientInfoModels.in_charge_name = reader.GetString(reader.GetOrdinal("in_charge_name"));
                 patientInfoModels.insuredperson_name = reader.GetString(reader.GetOrdinal("insuredperson_name"));
-                patientInfoModels.birthday = reader.GetDateTime(reader.GetOrdinal("birthday"));
+                patientInfoModels.birthday = reader.GetString(reader.GetOrdinal("birthday"));
+                
                 if (reader.GetString(reader.GetOrdinal("calender")) == "lunar")
                     patientInfoModels.calender = true;
                 else patientInfoModels.calender = false;
 
-
+                MessageBox.Show("검색성공");
             }   
+            else
+                MessageBox.Show("환자가 존재하지 않습니다.");
             reader.Close();
             return patientInfoModels;
         }
 
+
         public bool Update(PatientInfoModel objNewPatienInfo)
         {
-            throw new NotImplementedException();
+            DbConnect_init();
+            String sql = "UPDATE patientinfo " +
+                "SET " +
+                "Insurance = '" + objNewPatienInfo.Insurance + "'," +
+                " insuredperson_name = '" + objNewPatienInfo.insuredperson_name + "'," +
+                " card_number = '" + objNewPatienInfo.card_number + "'," +
+                " Relationship = '" + objNewPatienInfo.Relationship + "'," +
+                " Combination = ' " + objNewPatienInfo.Combination + "'," +
+                " cellphone = '" + objNewPatienInfo.cellphone + "'," +
+                " phone = '" + objNewPatienInfo.phone + "'," +
+                " post_number = '" + objNewPatienInfo.post_number + "'," +
+                " adrress = '" + objNewPatienInfo.adrress + "'," +
+                " mail= '" + objNewPatienInfo.mail + "', " +
+                "patient_memo = '" + objNewPatienInfo.patient_memo + "'," +
+                " discount_percent = '" + objNewPatienInfo.discount_percent + "'," +
+                " discount_reason = '" + objNewPatienInfo.discount_reason + "'," +
+                " in_charge_name = '" + objNewPatienInfo.in_charge_name + "'," +
+                " birthday = '" + objNewPatienInfo.birthday + "'," +
+                " calender = '" + objNewPatienInfo.calender + "'" +
+                "WHERE id = '" + objNewPatienInfo.id+"'";
+
+            OracleCommand comm = new OracleCommand();
+            comm.Connection = conn;
+            comm.CommandText = sql;
+
+            try
+            {
+                comm.ExecuteNonQuery();
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show("올바른 환자 정보를 입력하세요");
+                conn.Close();
+                return false;
+            }
+            conn.Close();
+            MessageBox.Show("수정되었습니다.");
+            return true;
         }
+
     }
 }

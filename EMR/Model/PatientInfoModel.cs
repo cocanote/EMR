@@ -122,12 +122,12 @@ public class PatientInfoModel : ObservableObject
     }
     string _in_charge_name;
 
-    public DateTime? birthday
+    public String birthday
     {
         get { return _birthday; }
         set { _birthday = value; RaisePropertyChanged("birthday"); }
     }
-    DateTime? _birthday;
+    String _birthday;
 
     public bool calender
     {

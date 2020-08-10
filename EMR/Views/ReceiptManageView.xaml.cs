@@ -29,20 +29,5 @@ namespace EMR
         }
      
     }
-    public class YourConverter : IMultiValueConverter
-    {
-
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            Tuple<object, object> Tuple = new Tuple<object, object>(values[0], values[1]);
-            return Tuple;
-        }
-
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-
-    }
+    
 }
