@@ -17,10 +17,6 @@ namespace EMR.Model
         public PatientInfoService()
         {
         }
-
-       
-
-        
         public bool Insert(PatientInfoModel objNewPatienInfo)
         {
             DbConnect_init();
@@ -89,20 +85,14 @@ namespace EMR.Model
         {
             DbConnect_init();
             string sql = "select * from patientinfo where name= '"+name+"' AND rrnumber ='"+rrnumber+"'";
-
             OracleCommand comm = new OracleCommand();
             comm.Connection = conn;
             comm.CommandText = sql;
-
             OracleDataReader reader = comm.ExecuteReader(CommandBehavior.CloseConnection);
-
             PatientInfoModel patientInfoModels = new PatientInfoModel();
-
-
+           
             if (reader.Read())
             {
-                
-                System.Diagnostics.Trace.WriteLine(reader.GetString(reader.GetOrdinal("name")));
                 patientInfoModels.id = reader.GetInt32(reader.GetOrdinal("id"));
                 patientInfoModels.name = reader.GetString(reader.GetOrdinal("name"));
                 patientInfoModels.rrnumber =  reader.GetString(reader.GetOrdinal("rrnumber"));
@@ -125,10 +115,12 @@ namespace EMR.Model
                 
                 if (reader.GetString(reader.GetOrdinal("calender")) == "lunar")
                     patientInfoModels.calender = true;
-                else patientInfoModels.calender = false;
-
-                MessageBox.Show("검색성공");
-            }   
+                else patientInfoModels.calender = false;              
+            }
+            else if (name == null || rrnumber == null)
+            {
+                MessageBox.Show("이름과 주민번호를 모두 입력해주세요.");
+            }
             else
                 MessageBox.Show("환자가 존재하지 않습니다.");
             reader.Close();
@@ -178,5 +170,6 @@ namespace EMR.Model
             return true;
         }
 
+       
     }
 }

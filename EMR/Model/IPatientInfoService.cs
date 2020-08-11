@@ -13,5 +13,6 @@ namespace EMR.Model
         bool Update(PatientInfoModel objNewPatienInfo);
         bool Delete(int id);
         PatientInfoModel Search(String name, String rrnumber);
+
     }
 }

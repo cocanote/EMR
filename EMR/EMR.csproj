@@ -73,9 +73,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\IPatientInfoService.cs" />
+    <Compile Include="Model\IReceiptInfoService.cs" />
     <Compile Include="Model\PatientInfoModel.cs" />
     <Compile Include="Model\PatientInfoService.cs" />
-    <Compile Include="ViewModel\propfull.cs" />
+    <Compile Include="Model\ReceiptInfoModel.cs" />
+    <Compile Include="Model\ReceiptInfoService.cs" />
     <Compile Include="ViewModel\ReceiptManageViewModel.cs" />
     <Compile Include="Views\ReceiptManageView.xaml.cs">
       <DependentUpon>ReceiptManageView.xaml</DependentUpon>

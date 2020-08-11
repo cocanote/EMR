@@ -17,36 +17,58 @@ namespace EMR.ViewModel
     public class ReceiptManageViewModel : ViewModelBase
     {
         IPatientInfoService ObjPatientInfoService;
-       
+        IReceiptInfoService ObjRececiptInfoService;
+
+
         public RelayCommand OnclickSearchCommand { get; set; }
         public RelayCommand OnclickNewCommand { get; set; }
         public RelayCommand OnclickSaveCommand { get; set; }
         public RelayCommand OnclickModifyCommand { get; set; }
         public RelayCommand OnclickDeleteCommand { get; set; }
+        public RelayCommand OnclickReceiptCommand { get; set; }
+        public RelayCommand OnclickReceiptModifyCommand { get; set; }
+        public RelayCommand OnclickReceiptReservationCommand { get; set; }
         private PatientInfoModel patientInfo;
+        private ReceiptInfoModel receiptInfo;
+        private List<ReceiptInfoModel> receipted;
         string[] insurance = { "실비보험", "생명보험", "상해보험" };
         string[] relation = { "부", "모", "본인", "기타" };
         string[] discount_percent = { "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
         string[] discount_reason = { "임직원가족", "저소득층", "장애인의료비지원", };
         string[] in_chage_name = { "안재홍", "이병원", "김머핀" };
+        string[] patient_classification = { "내과", "외과", "소아과", "성형외과" };
+        string[] doctor_in_charge = { "김사부","허준" };
+        string[] series = { "null","null" };
+        string[] diagnostic_experience = {"초진","재진"};
+         
+
         bool checkedVar = false;
 
         public ReceiptManageViewModel()
         {
             ObjPatientInfoService = new PatientInfoService();
+            ObjRececiptInfoService = new ReceiptInfoService();
             OnclickSearchCommand = new RelayCommand(OnclickSearchCommend, null);
             OnclickNewCommand = new RelayCommand(OnclickNewCommend, null);
             OnclickSaveCommand = new RelayCommand(OnclickSaveCommend, null);
             OnclickModifyCommand = new RelayCommand(OnclickModifyCommend, null);
             OnclickDeleteCommand = new RelayCommand(OnclickDeleteCommend, null);
+
+            OnclickReceiptCommand = new RelayCommand(OnclickReceiptCommend, null);
+            OnclickReceiptModifyCommand = new RelayCommand(OnclickReceiptModifyCommend, null);
+            OnclickReceiptReservationCommand = new RelayCommand(OnclickReceiptReservationCommend, null);
             PatientInfo = new PatientInfoModel();
+            ReceiptInfo = new ReceiptInfoModel();
+            Receipted = new List<ReceiptInfoModel>();
             ReadOn = true;
             Comboclick = false;
-           
+            Receipted = ObjRececiptInfoService.GetList();
+
+
+
 
         }
 
-        
 
         public bool CheckedVar
         {
@@ -94,13 +116,45 @@ namespace EMR.ViewModel
             get { return in_chage_name; }
             set { in_chage_name = value; }
         }
-
-        
+        public string[] Patient_classification
+        {
+            get { return patient_classification; }
+            set { patient_classification = value; }
+        }
+        public string[] Doctor_in_charge
+        {
+            get { return doctor_in_charge; }
+            set { doctor_in_charge = value; }
+        }
+        public string[] Series
+        {
+            get { return series; }
+            set { series = value; }
+        }
+        public string[] Diagnostic_experience
+        {
+            get { return diagnostic_experience; }
+            set { diagnostic_experience = value; }
+        }
 
         public PatientInfoModel PatientInfo
         {
             get { return patientInfo; }
             set{  patientInfo = value; RaisePropertyChanged(() => PatientInfo); }
+
+
+        }
+        public ReceiptInfoModel ReceiptInfo
+        {
+            get { return receiptInfo; }
+            set { receiptInfo = value; RaisePropertyChanged(() => ReceiptInfo); }
+
+
+        }
+        public List<ReceiptInfoModel> Receipted
+        {
+            get { return receipted; }
+            set { receipted = value; RaisePropertyChanged(() => Receipted); }
 
 
         }
@@ -127,7 +181,9 @@ namespace EMR.ViewModel
             {
                 ReadOn = true;
                 Comboclick = false;
+                PatientInfo = ObjPatientInfoService.Search(PatientInfo.name, PatientInfo.rrnumber);
             }
+            
         }
         private void OnclickModifyCommend()
         {
@@ -138,6 +194,28 @@ namespace EMR.ViewModel
         {
             ObjPatientInfoService.Delete(PatientInfo.id);
             PatientInfo = new PatientInfoModel();
+        }
+        private void OnclickReceiptReservationCommend()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnclickReceiptModifyCommend()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnclickReceiptCommend()
+        {
+            ReceiptInfo.patient_id = PatientInfo.id;
+            if (ObjRececiptInfoService.Insert(ReceiptInfo))
+            {
+                MessageBox.Show("접수되었습니다.");
+                Receipted = ObjRececiptInfoService.GetList();
+                ReceiptInfo = new ReceiptInfoModel();
+            }
+            else
+                MessageBox.Show("입력정보를 확인해주세요");
         }
 
     }
